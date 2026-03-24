@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "landing_pages",
+  "info": {
+    "singularName": "landing-page",
+    "pluralName": "landing-pages",
+    "displayName": "Landing Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "seoTitle": { "type": "string" },
+    "seoDescription": { "type": "text" },
+    "hero": { "type": "json" },
+    "testimonials": { "type": "json" },
+    "useCases": { "type": "json" },
+    "featurePageIntro": { "type": "json" },
+    "pricingPageIntro": { "type": "json" }
+  }
+}

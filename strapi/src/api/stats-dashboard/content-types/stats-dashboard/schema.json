@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "stats_dashboards",
+  "info": {
+    "singularName": "stats-dashboard",
+    "pluralName": "stats-dashboards",
+    "displayName": "Stats Dashboard"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "totalSitesCrawled": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "accessibilityIssuesFound": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "averageComplianceScore": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "trend": {
+      "type": "json",
+      "required": true
+    }
+  }
+}
