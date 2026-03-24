@@ -1,0 +1,13 @@
+services:
+  strapi:
+    build:
+      context: ./strapi
+    container_name: accessibility-strapi
+    ports:
+      - "1337:1337"
+    env_file:
+      - ./strapi/.env
+    volumes:
+      - ./strapi:/opt/app
+      - /opt/app/node_modules
+  
