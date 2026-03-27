@@ -541,6 +541,7 @@ export interface ApiStatsDashboardStatsDashboard extends Schema.SingleType {
 export interface ApiSubscriberSubscriber extends Schema.CollectionType {
   collectionName: 'subscribers';
   info: {
+    description: '';
     displayName: 'Subscriber';
     pluralName: 'subscribers';
     singularName: 'subscriber';

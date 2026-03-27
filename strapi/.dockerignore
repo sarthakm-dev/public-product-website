@@ -1,0 +1,6 @@
+.cache
+.strapi
+.tmp
+build
+node_modules
+npm-debug.log*

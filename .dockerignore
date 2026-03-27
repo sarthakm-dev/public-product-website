@@ -1,0 +1,9 @@
+.git
+.gitignore
+.husky
+.next
+coverage
+node_modules
+strapi
+npm-debug.log*
+vitest.config.ts.timestamp-*

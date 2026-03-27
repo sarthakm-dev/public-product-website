@@ -20,6 +20,11 @@
 # production
 /build
 
+strapi/node_modules
+strapi/build
+strapi/.strapi
+strapi/.tmp
+
 # misc
 .DS_Store
 *.pem
@@ -32,6 +37,8 @@ yarn-error.log*
 
 # env files
 .env
+.env.local
+.env.docker
 
 # vercel
 .vercel
