@@ -1,13 +1,38 @@
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: accessibility-web
+    env_file:
+      - ./.env.docker
+    ports:
+      - "3000:3000"
+    depends_on:
+      strapi:
+        condition: service_healthy
+
   strapi:
     build:
       context: ./strapi
+      dockerfile: Dockerfile
     container_name: accessibility-strapi
     ports:
       - "1337:1337"
     env_file:
       - ./strapi/.env
     volumes:
-      - ./strapi:/opt/app
-      - /opt/app/node_modules
-  
+      - ./strapi/.tmp:/opt/app/.tmp
+      - ./strapi/public/uploads:/opt/app/public/uploads
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:1337/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
