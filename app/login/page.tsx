@@ -2,14 +2,14 @@ import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 
-import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
+import { SectionSkeleton } from '@/components/common/section-skeleton';
 import { authOptions } from '@/lib/auth-options';
 
 const LoginForm = dynamic(
   () => import('@/components/auth/login-form').then(mod => mod.LoginForm),
   {
     loading: () => (
-      <RouteSectionPlaceholder
+      <SectionSkeleton
         label="login-form"
         title="Loading login form"
         className="mx-auto max-w-xl p-8"

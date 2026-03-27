@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LoaderCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { getErrorMessage, parseJsonSafely } from '@/lib/api';
 import { apiRoutes } from '@/lib/routes';
 import type { StatsResponse } from '@/lib/types';
@@ -75,9 +75,19 @@ export function DashboardStats() {
           Dashboard Metrics
         </p>
         {loading ? (
-          <div className="mt-6 flex items-center gap-3 text-slate-300">
-            <LoaderCircle className="size-4 animate-spin" />
-            {`Loading \`${apiRoutes.stats}\``}
+          <div className="mt-6 space-y-4" aria-hidden="true">
+            <div className="grid gap-4 md:grid-cols-2">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={`dashboard-stat-skeleton-${index}`}
+                  className="rounded-3xl border border-white/10 bg-white/5 p-5"
+                >
+                  <Skeleton className="h-4 w-28 bg-white/10" />
+                  <Skeleton className="mt-4 h-8 w-20 bg-white/10" />
+                </div>
+              ))}
+            </div>
+            <span className="sr-only">{`Loading \`${apiRoutes.stats}\``}</span>
           </div>
         ) : (
           <div className="mt-6 grid gap-4 md:grid-cols-2">

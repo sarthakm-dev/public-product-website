@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 
 import { Hero } from '@/components/marketing/hero';
 import { FeatureGrid } from '@/components/marketing/feature-grid';
-import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
+import { SectionSkeleton } from '@/components/common/section-skeleton';
 import { PricingGrid } from '@/components/marketing/pricing-grid';
 import { SectionShell } from '@/components/marketing/section-shell';
 import { Testimonials } from '@/components/marketing/testimonials';
@@ -14,7 +14,7 @@ const LiveStats = dynamic(
   () => import('@/components/marketing/live-stats').then(mod => mod.LiveStats),
   {
     loading: () => (
-      <RouteSectionPlaceholder
+      <SectionSkeleton
         label="live-stats"
         title="Loading live stats"
         lines={4}
@@ -30,7 +30,7 @@ const NewsletterForm = dynamic(
     ),
   {
     loading: () => (
-      <RouteSectionPlaceholder
+      <SectionSkeleton
         label="newsletter-form"
         title="Loading newsletter form"
       />

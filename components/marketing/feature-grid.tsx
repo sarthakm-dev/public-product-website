@@ -29,7 +29,7 @@ export function FeatureGrid({ features }: { features: FeatureItem[] }) {
             key={feature.id}
             className="p-6 transition hover:-translate-y-1"
           >
-            <div className="mb-5 inline-flex rounded-2xl bg-cyan-400/10 p-3 text-cyan-400">
+            <div className="mb-5 inline-flex rounded-2xl bg-cyan-400/10 p-3 text-cyan-400 w-10">
               <Icon className="size-5" />
             </div>
             <h3 className="text-xl font-semibold text-white">

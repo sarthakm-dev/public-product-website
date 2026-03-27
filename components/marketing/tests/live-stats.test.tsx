@@ -26,6 +26,7 @@ vi.mock('recharts', () => ({
   }) => <div data-points={data.length}>{children}</div>,
   Area: () => <div data-testid="area-chart-series" />,
   CartesianGrid: () => <div />,
+  Legend: () => <div />,
   Tooltip: () => <div />,
   XAxis: () => <div />,
   YAxis: () => <div />,

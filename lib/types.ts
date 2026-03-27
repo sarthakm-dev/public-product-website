@@ -120,7 +120,7 @@ export type FormValues = z.infer<typeof loginSchema>;
 
 export type SignUpFormValues = z.infer<typeof signupSchema>;
 
-export type RouteSectionPlaceholderProps = {
+export type SectionSkeletonProps = {
   label: string;
   title?: string;
   lines?: number;

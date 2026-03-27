@@ -42,9 +42,9 @@ describe('DashboardStats', () => {
 
     render(<DashboardStats />);
 
-    expect(
-      screen.getByText(`Loading \`${apiRoutes.stats}\``)
-    ).toBeInTheDocument();
+    expect(screen.getByText(`Loading \`${apiRoutes.stats}\``)).toHaveClass(
+      'sr-only'
+    );
     expect(await screen.findByText('24')).toBeInTheDocument();
     expect(screen.getByText('94%')).toBeInTheDocument();
 

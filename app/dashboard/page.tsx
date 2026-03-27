@@ -2,17 +2,16 @@ import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 
-import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
+import { SectionSkeleton } from '@/components/common/section-skeleton';
 import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { authOptions } from '@/lib/auth-options';
 
 const SignOutButton = dynamic(
   () =>
     import('@/components/auth/sign-out-button').then(mod => mod.SignOutButton),
   {
-    loading: () => (
-      <div className="h-9 w-24 animate-pulse rounded-full bg-white/10" />
-    ),
+    loading: () => <Skeleton className="h-9 w-24 rounded-full bg-white/10" />,
   }
 );
 
@@ -23,7 +22,7 @@ const DashboardStats = dynamic(
     ),
   {
     loading: () => (
-      <RouteSectionPlaceholder
+      <SectionSkeleton
         label="dashboard-stats"
         title="Loading dashboard stats"
         className="p-8"
