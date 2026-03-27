@@ -1,9 +1,37 @@
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
-import { SignOutButton } from '@/components/auth/sign-out-button';
-import { DashboardStats } from '@/components/common/dashboard-stats';
+
+import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
 import { Card } from '@/components/ui/card';
 import { authOptions } from '@/lib/auth-options';
+
+const SignOutButton = dynamic(
+  () =>
+    import('@/components/auth/sign-out-button').then(mod => mod.SignOutButton),
+  {
+    loading: () => (
+      <div className="h-9 w-24 animate-pulse rounded-full bg-white/10" />
+    ),
+  }
+);
+
+const DashboardStats = dynamic(
+  () =>
+    import('@/components/common/dashboard-stats').then(
+      mod => mod.DashboardStats
+    ),
+  {
+    loading: () => (
+      <RouteSectionPlaceholder
+        label="dashboard-stats"
+        title="Loading dashboard stats"
+        className="p-8"
+        lines={4}
+      />
+    ),
+  }
+);
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);

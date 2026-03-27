@@ -1,8 +1,22 @@
+import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 
-import { LoginForm } from '@/components/auth/login-form';
+import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
 import { authOptions } from '@/lib/auth-options';
+
+const LoginForm = dynamic(
+  () => import('@/components/auth/login-form').then(mod => mod.LoginForm),
+  {
+    loading: () => (
+      <RouteSectionPlaceholder
+        label="login-form"
+        title="Loading login form"
+        className="mx-auto max-w-xl p-8"
+      />
+    ),
+  }
+);
 
 export default async function LoginPage() {
   const session = await getServerSession(authOptions);

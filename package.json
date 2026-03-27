@@ -51,6 +51,10 @@
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.1"
   },
+  "overrides": {
+    "brace-expansion": "^5.0.5",
+    "minimatch": "^10.0.0"
+  },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
       "prettier --write",

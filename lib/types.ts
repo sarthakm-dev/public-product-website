@@ -119,3 +119,10 @@ export type StrapiSingleResponse<T> = {
 export type FormValues = z.infer<typeof loginSchema>;
 
 export type SignUpFormValues = z.infer<typeof signupSchema>;
+
+export type RouteSectionPlaceholderProps = {
+  label: string;
+  title?: string;
+  lines?: number;
+  className?: string;
+};

@@ -1,13 +1,42 @@
+import dynamic from 'next/dynamic';
+
 import { Hero } from '@/components/marketing/hero';
 import { FeatureGrid } from '@/components/marketing/feature-grid';
-import { LiveStats } from '@/components/marketing/live-stats';
-import { NewsletterForm } from '@/components/marketing/newsletter-form';
+import { RouteSectionPlaceholder } from '@/components/common/route-section-placeholder';
 import { PricingGrid } from '@/components/marketing/pricing-grid';
 import { SectionShell } from '@/components/marketing/section-shell';
 import { Testimonials } from '@/components/marketing/testimonials';
 import { getFeatures, getLandingPage, getPricingPlans } from '@/lib/strapi';
 
 export const revalidate = 300;
+
+const LiveStats = dynamic(
+  () => import('@/components/marketing/live-stats').then(mod => mod.LiveStats),
+  {
+    loading: () => (
+      <RouteSectionPlaceholder
+        label="live-stats"
+        title="Loading live stats"
+        lines={4}
+      />
+    ),
+  }
+);
+
+const NewsletterForm = dynamic(
+  () =>
+    import('@/components/marketing/newsletter-form').then(
+      mod => mod.NewsletterForm
+    ),
+  {
+    loading: () => (
+      <RouteSectionPlaceholder
+        label="newsletter-form"
+        title="Loading newsletter form"
+      />
+    ),
+  }
+);
 
 export default async function HomePage() {
   const [landingPage, features, pricingPlans] = await Promise.all([
@@ -27,7 +56,7 @@ export default async function HomePage() {
         }
         description={
           landingPage?.featurePageIntro?.description ??
-          'Feature content is sourced from the `Feature` collection in Strapi and statically regenerated.'
+          'Tools built for modern web compliance.'
         }
       >
         <FeatureGrid features={features} />

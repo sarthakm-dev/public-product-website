@@ -23,4 +23,4 @@ COPY . .
 
 EXPOSE 1337
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "develop"]
