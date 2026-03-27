@@ -4,13 +4,20 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-options';
 
 export async function POST() {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    return NextResponse.json({
+      message: 'Mock crawl queued successfully for the current account.',
+    });
+  } catch {
+    return NextResponse.json(
+      { error: 'Unable to queue a mock crawl right now.' },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({
-    message: 'Mock crawl queued successfully for the current account.',
-  });
 }
