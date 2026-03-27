@@ -5,26 +5,33 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
+import { toast } from 'sonner';
 
+import { ChartContainer } from '@/components/ui/chart';
 import { Card } from '@/components/ui/card';
-import { useToast } from '@/components/common/toast-provider';
 import { getErrorMessage } from '@/lib/api';
+import { apiRoutes } from '@/lib/routes';
 import type { StatsResponse } from '@/lib/types';
+
+const chartConfig = {
+  score: {
+    label: 'Compliance score',
+    color: '#22d3ee',
+  },
+};
 
 export function LiveStats() {
   const [data, setData] = useState<StatsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     let active = true;
 
-    fetch('/api/stats')
+    fetch(apiRoutes.stats)
       .then(async response => {
         if (!response.ok) {
           throw new Error('Failed to load stats');
@@ -41,9 +48,7 @@ export function LiveStats() {
         const message = getErrorMessage(reason, 'Failed to load stats');
         if (active) {
           setError(message);
-          toast({
-            variant: 'error',
-            title: 'Unable to load live stats',
+          toast.error('Unable to load live stats', {
             description: message,
           });
         }
@@ -85,8 +90,11 @@ export function LiveStats() {
         <Stat label="Subscribers" value={data?.totalSubscribers ?? 0} />
       </div>
 
-      <div className="mt-8 h-72 rounded-[28px] border border-white/10 bg-slate-950/40 p-4">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="mt-8 rounded-[28px] border border-white/10 bg-slate-950/40 p-4">
+        <ChartContainer
+          config={chartConfig}
+          className="h-[240px] w-full min-w-0 sm:h-[280px] lg:h-[320px]"
+        >
           <AreaChart data={Array.isArray(data?.trend) ? data.trend : []}>
             <defs>
               <linearGradient id="score" x1="0" x2="0" y1="0" y2="1">
@@ -110,12 +118,12 @@ export function LiveStats() {
             <Area
               type="monotone"
               dataKey="score"
-              stroke="#22d3ee"
+              stroke="var(--color-score)"
               fillOpacity={1}
               fill="url(#score)"
             />
           </AreaChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </div>
     </Card>
   );

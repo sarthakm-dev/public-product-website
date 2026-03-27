@@ -2,6 +2,13 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { SignupForm } from '../signup-form';
 import { signIn } from 'next-auth/react';
 
+const { toast } = vi.hoisted(() => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
 vi.mock('next-auth/react', () => ({
   signIn: vi.fn(() => Promise.resolve({ error: null })),
 }));
@@ -13,21 +20,36 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
+vi.mock('sonner', () => ({
+  toast,
+}));
+
 describe('SignupForm', () => {
   beforeEach(() => {
-    // Reset mocks before each test
     vi.resetAllMocks();
+    HTMLElement.prototype.scrollIntoView = vi.fn();
   });
 
   it('shows validation errors when fields are empty', async () => {
     render(<SignupForm />);
     fireEvent.click(screen.getByText(/create account/i));
 
-    expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
-    expect(await screen.findByText(/enter a valid email/i)).toBeInTheDocument();
+    const nameInput = screen.getByPlaceholderText(/full name/i);
+    const nameError = await screen.findByText(/name is required/i);
+    const emailError = await screen.findByText(/enter a valid email/i);
     expect(
       await screen.findByText(/use at least 6 characters/i)
     ).toBeInTheDocument();
+    expect(nameError).toBeInTheDocument();
+    expect(emailError).toBeInTheDocument();
+    expect(nameInput).toHaveAttribute('aria-invalid', 'true');
+    expect(nameInput).toHaveAttribute(
+      'aria-describedby',
+      expect.stringContaining(nameError.id)
+    );
+    await waitFor(() => {
+      expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalled();
+    });
   });
 
   it('shows error when API returns failure', async () => {
@@ -51,11 +73,14 @@ describe('SignupForm', () => {
     });
     fireEvent.click(screen.getByText(/create account/i));
 
-    expect(await screen.findByText(/signup failed/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith('Signup failed', {
+        description: 'Signup failed.',
+      });
+    });
   });
 
   it('calls signIn and redirects on success', async () => {
-    // Mock fetch to return success
     global.fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
@@ -83,6 +108,8 @@ describe('SignupForm', () => {
       });
     });
 
-    expect(await screen.findByText(/account created/i)).toBeInTheDocument();
+    expect(toast.success).toHaveBeenCalledWith('Account created', {
+      description: 'Account created.',
+    });
   });
 });

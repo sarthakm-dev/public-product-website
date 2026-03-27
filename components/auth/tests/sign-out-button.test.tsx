@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { pageRoutes } from '@/lib/routes';
 import { SignOutButton } from '../sign-out-button';
 
 vi.mock('next-auth/react', () => ({
@@ -15,6 +16,6 @@ describe('SignOutButton', () => {
   it('calls signOut on click', () => {
     render(<SignOutButton />);
     fireEvent.click(screen.getByText(/logout/i));
-    expect(signOut).toHaveBeenCalledWith({ callbackUrl: '/' });
+    expect(signOut).toHaveBeenCalledWith({ callbackUrl: pageRoutes.home });
   });
 });

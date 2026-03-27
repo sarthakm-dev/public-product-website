@@ -1,19 +1,39 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useId, useRef, useState, useTransition } from 'react';
+import { toast } from 'sonner';
 
-import { useToast } from '@/components/common/toast-provider';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { getErrorMessage, parseJsonSafely } from '@/lib/api';
+import { composeAriaDescribedBy, scrollAndFocusElement } from '@/lib/aria';
+import { apiRoutes } from '@/lib/routes';
 import { newsletterSchema } from '@/lib/schemas';
 
 export function NewsletterForm() {
+  const emailId = useId();
+  const hintId = `${emailId}-hint`;
+  const emailRef = useRef<HTMLInputElement | null>(null);
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const { toast } = useToast();
+
+  const getSuccessTitle = (message?: string) => {
+    if (/already on the waitlist/i.test(message ?? '')) {
+      return 'You are already on the waitlist';
+    }
+
+    return 'You are on the waitlist';
+  };
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    scrollAndFocusElement(emailRef.current);
+  }, [error]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -21,13 +41,17 @@ export function NewsletterForm() {
 
     const parsed = newsletterSchema.safeParse({ email });
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? 'Invalid email');
+      const message = parsed.error.issues[0]?.message;
+      setError(message ?? 'Invalid email');
+      toast.error('Subscription failed', {
+        description: message,
+      });
       return;
     }
 
     startTransition(async () => {
       try {
-        const response = await fetch('/api/subscribe', {
+        const response = await fetch(apiRoutes.subscribe, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(parsed.data),
@@ -41,26 +65,20 @@ export function NewsletterForm() {
         if (!response.ok) {
           const message = data?.error ?? 'Subscription failed.';
           setError(message);
-          toast({
-            variant: 'error',
-            title: 'Subscription failed',
+          toast.error('Subscription failed', {
             description: message,
           });
           return;
         }
 
         setEmail('');
-        toast({
-          variant: 'success',
-          title: 'You are on the waitlist',
+        toast.success(getSuccessTitle(data?.message), {
           description: data?.message ?? 'Subscribed.',
         });
       } catch (error) {
         const message = getErrorMessage(error, 'Subscription failed.');
         setError(message);
-        toast({
-          variant: 'error',
-          title: 'Subscription failed',
+        toast.error('Subscription failed', {
           description: message,
         });
       }
@@ -78,8 +96,9 @@ export function NewsletterForm() {
             Capture early adopters directly in Strapi
           </h3>
           <p className="max-w-xl text-sm leading-7 text-slate-300">
-            This form submits client-side to `/api/subscribe`, validates email,
-            stores the subscriber in Strapi, and surfaces success/error states.
+            This form submits client-side to <code>{apiRoutes.subscribe}</code>,
+            validates email, stores the subscriber in Strapi, and surfaces
+            success/error states.
           </p>
         </div>
       </div>
@@ -87,19 +106,27 @@ export function NewsletterForm() {
       <form
         className="mt-6 flex flex-col gap-4 md:flex-row"
         onSubmit={onSubmit}
+        noValidate
       >
         <Input
+          id={emailId}
+          ref={emailRef}
           type="email"
           placeholder="Enter your work email"
           value={email}
           onChange={event => setEmail(event.target.value)}
+          aria-label="Work email"
+          aria-invalid={error ? 'true' : 'false'}
+          aria-describedby={composeAriaDescribedBy(hintId)}
         />
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending} aria-busy={pending}>
           {pending ? 'Submitting...' : 'Join Waitlist'}
         </Button>
       </form>
 
-      {error ? <p className="mt-4 text-sm text-rose-300">{error}</p> : null}
+      <p id={hintId} className="mt-4 text-sm text-slate-300">
+        Use a valid work email to join the waitlist.
+      </p>
     </Card>
   );
 }

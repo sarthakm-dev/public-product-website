@@ -1,12 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { apiRoutes } from '@/lib/routes';
 
-const toastMock = vi.fn();
+const { toast } = vi.hoisted(() => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
-vi.mock('@/components/common/toast-provider', () => ({
-  useToast: () => ({
-    toast: toastMock,
-  }),
+vi.mock('sonner', () => ({
+  toast,
 }));
 
 vi.mock('recharts', () => ({
@@ -65,10 +69,8 @@ describe('LiveStats', () => {
     render(<LiveStats />);
 
     expect(await screen.findByText('Failed to load stats')).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledWith('/api/stats');
-    expect(toastMock).toHaveBeenCalledWith({
-      variant: 'error',
-      title: 'Unable to load live stats',
+    expect(fetchMock).toHaveBeenCalledWith(apiRoutes.stats);
+    expect(toast.error).toHaveBeenCalledWith('Unable to load live stats', {
       description: 'Failed to load stats',
     });
   });
