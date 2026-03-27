@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getErrorMessage, parseJsonSafely } from '@/lib/api';
+import { apiRoutes } from '@/lib/routes';
 import type { StatsResponse } from '@/lib/types';
 
 export function DashboardStats() {
@@ -15,7 +16,7 @@ export function DashboardStats() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/stats')
+    fetch(apiRoutes.stats)
       .then(async response => {
         if (!response.ok) {
           throw new Error('Failed to load dashboard stats.');
@@ -38,7 +39,7 @@ export function DashboardStats() {
   const triggerMockCrawl = async () => {
     setStatus('Running mock crawl...');
     try {
-      const response = await fetch('/api/mock-crawl', { method: 'POST' });
+      const response = await fetch(apiRoutes.mockCrawl, { method: 'POST' });
       const payload = await parseJsonSafely<{
         message?: string;
         error?: string;
@@ -76,7 +77,7 @@ export function DashboardStats() {
         {loading ? (
           <div className="mt-6 flex items-center gap-3 text-slate-300">
             <LoaderCircle className="size-4 animate-spin" />
-            Loading `/api/stats`
+            {`Loading \`${apiRoutes.stats}\``}
           </div>
         ) : (
           <div className="mt-6 grid gap-4 md:grid-cols-2">

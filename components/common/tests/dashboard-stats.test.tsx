@@ -1,10 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { apiRoutes } from '@/lib/routes';
 
-const toast = {
-  success: vi.fn(),
-  error: vi.fn(),
-};
+const { toast } = vi.hoisted(() => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 vi.mock('sonner', () => ({
   toast,
@@ -39,7 +42,9 @@ describe('DashboardStats', () => {
 
     render(<DashboardStats />);
 
-    expect(screen.getByText('Loading `/api/stats`')).toBeInTheDocument();
+    expect(
+      screen.getByText(`Loading \`${apiRoutes.stats}\``)
+    ).toBeInTheDocument();
     expect(await screen.findByText('24')).toBeInTheDocument();
     expect(screen.getByText('94%')).toBeInTheDocument();
 
@@ -60,8 +65,8 @@ describe('DashboardStats', () => {
       description: 'Mock crawl queued successfully for the current account.',
     });
 
-    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/stats');
-    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/mock-crawl', {
+    expect(fetchMock).toHaveBeenNthCalledWith(1, apiRoutes.stats);
+    expect(fetchMock).toHaveBeenNthCalledWith(2, apiRoutes.mockCrawl, {
       method: 'POST',
     });
   });
