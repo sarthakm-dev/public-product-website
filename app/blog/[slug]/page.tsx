@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { getBlogPostBySlug } from '@/lib/strapi';
 import { formatDate } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BlogDetailPage({
   params,
 }: {

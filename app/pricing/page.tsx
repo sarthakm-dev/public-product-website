@@ -2,6 +2,8 @@ import { PricingGrid } from '@/components/marketing/pricing-grid';
 import { SectionShell } from '@/components/marketing/section-shell';
 import { getLandingPage, getPricingPlans } from '@/lib/strapi';
 
+export const revalidate = 300;
+
 export default async function PricingPage() {
   const [landingPage, plans] = await Promise.all([
     getLandingPage(),

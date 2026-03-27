@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { getBlogPosts } from '@/lib/strapi';
 import { formatDate } from '@/lib/utils';
 
+export const revalidate = 300;
+
 export default async function BlogPage() {
   const posts = await getBlogPosts();
 

@@ -2,6 +2,8 @@ import { FeatureGrid } from '@/components/marketing/feature-grid';
 import { SectionShell } from '@/components/marketing/section-shell';
 import { getFeatures, getLandingPage } from '@/lib/strapi';
 
+export const revalidate = 300;
+
 export default async function FeaturesPage() {
   const [landingPage, features] = await Promise.all([
     getLandingPage(),

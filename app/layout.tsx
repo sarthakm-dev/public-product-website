@@ -1,33 +1,26 @@
-import type { Metadata } from "next";
+import './globals.css';
+import { SiteFooter } from '@/components/common/site-footer';
+import { SiteHeader } from '@/components/common/site-header';
+import { ThemeProvider } from '@/components/common/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
+import { siteMetadata } from '@/lib/site-metedata';
 
-import "./globals.css";
-
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SITE_NAME } from "@/lib/constants";
-
-export const metadata: Metadata = {
-  title: SITE_NAME,
-  description:
-    "Premium public product website for web crawl accessibility and compliance monitoring.",
-};
+export const metadata = siteMetadata;
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-slate-950 text-white">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark">
           <div className="app-shell relative flex min-h-screen flex-col overflow-hidden">
             <div className="app-glow pointer-events-none absolute inset-x-0 top-0 h-96" />
             <SiteHeader />
             <main className="relative flex-1">{children}</main>
             <SiteFooter />
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
