@@ -2,6 +2,9 @@
   "name": "accessibility-strapi",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
@@ -16,6 +19,7 @@
     "@strapi/plugin-upload": "4.26.1",
     "strapi-health-plugin": "1.2.2",
     "better-sqlite3": "^11.10.0",
+    "pg": "^8.16.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
