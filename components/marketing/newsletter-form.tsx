@@ -104,7 +104,7 @@ export function NewsletterForm() {
       </div>
 
       <form
-        className="mt-6 flex flex-col gap-4 md:flex-row"
+        className="mt-6 flex flex-col gap-4 justify-center items-center md:flex-row"
         onSubmit={onSubmit}
         noValidate
       >
