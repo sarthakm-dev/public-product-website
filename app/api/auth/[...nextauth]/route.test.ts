@@ -16,14 +16,23 @@ describe('NextAuth route wiring', () => {
     vi.clearAllMocks();
   });
 
-  it('creates one NextAuth handler and exports it for both GET and POST', async () => {
+  it('creates one NextAuth handler and delegates both GET and POST to it', async () => {
     const handler = vi.fn();
     nextAuthMock.mockReturnValue(handler);
 
     const routeModule = await import('./route');
+    const request = {} as Request;
+    const context = {
+      params: Promise.resolve({ nextauth: ['session'] }),
+    } as RouteContext<'/api/auth/[...nextauth]'>;
 
     expect(nextAuthMock).toHaveBeenCalledWith(authOptionsMock);
-    expect(routeModule.GET).toBe(handler);
-    expect(routeModule.POST).toBe(handler);
+
+    await routeModule.GET(request as never, context);
+    await routeModule.POST(request as never, context);
+
+    expect(handler).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenNthCalledWith(1, request, context);
+    expect(handler).toHaveBeenNthCalledWith(2, request, context);
   });
 });
