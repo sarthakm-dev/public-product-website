@@ -28,7 +28,7 @@ export default function RootLayout({
             <main className="relative flex-1">{children}</main>
             <SiteFooter />
           </div>
-          <Toaster />
+          <Toaster richColors />
         </ThemeProvider>
       </body>
     </html>
